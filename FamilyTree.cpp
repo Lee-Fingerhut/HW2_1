@@ -13,23 +13,6 @@
 #include "FamilyTree.hpp"
 using namespace std;
 using namespace family;
-/*
- class myExc: public exception {
- public:
- string exc;
- myExc(string str) {
- exc = str;
- }
- virtual const char* what() const throw() {
- return exc.c_str();
- }
- };
- */
-#define CHECK_THROW_STR(x, str) do {    \
-if(x) {                             \
-throw new std::string(str);           \
-}                                   \
-} while(0)
 
 string Tree::getName() {
     return this->name;
@@ -152,32 +135,28 @@ string Tree::member_rel(Tree* T, string name)
 
 Tree& Tree::addFather(string name, string father) {
     Tree* Tname = find_name_req(this, name) ;
-    CHECK_THROW_STR(!Tname, name+"does not exist");
-    //if(!Tname)
-    //{
-    //    throw runtime_error (name+" does not exist");
-    //}
-    CHECK_THROW_STR(Tname->father, name+"alredy has a father");
-    //if(Tname->father)
-    //{
-    //    throw runtime_error (name+" alredy has a father");
-    //}
+    if(!Tname)
+    {
+        throw std::runtime_error(name+"does not exist");
+    }
+    if(Tname->father)
+    {
+        throw std::runtime_error(name+"alredy has a father");
+    }
     Tname->father = new Tree(father) ;
     return *this;
 }
 
 Tree& Tree::addMother(string name, string mother) {
     Tree* Tname = find_name_req(this, name) ;
-    CHECK_THROW_STR(!Tname, name+"does not exist");
-    //if(!Tname)
-    //{
-    //    throw runtime_error (name+" does not exist");
-    //}
-    CHECK_THROW_STR(Tname->mother, name+"alredy has a mother");
-    //if(Tname->mother)
-    //{
-    //    throw runtime_error ( name+" alredy has a mother");
-    //}
+     if(!Tname)
+      {
+          throw std::runtime_error(name+"does not exist");
+      }
+    if(Tname->mother)
+    {
+         throw std::runtime_error(name+"alredy has a mother");
+    }
     Tname->mother = new Tree(mother) ;
     return *this;
 }
@@ -206,11 +185,11 @@ void Tree::display() {
 }
 
 string Tree::relation(string name) {
-    CHECK_THROW_STR(name.empty(), "got empty string");
-    //if(name.empty())
-    //{
-    //    throw runtime_error ("got empty string");
-    //}
+    
+    if(name.empty())
+    {
+        throw runtime_error ("got empty string");
+    }
     if (this->name == name) {
         return "me" ;
     }
@@ -265,7 +244,6 @@ string Tree::find(string name) {
             return s2;
         }
     }
-    //CHECK_THROW_STR(true, "The tree cannot handle the '"+name+"' relation");
     if(true)
     {
         throw runtime_error ("The tree cannot handle the '"+name+"' relation");
@@ -291,6 +269,6 @@ void Tree::remove(string name) {
         this->mother->remove(name);
     }
     else {
-        throw runtime_error("can't delete");
+        throw runtime_error ("can't delete");
     }
 }
