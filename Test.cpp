@@ -11,13 +11,15 @@
 using namespace std;
 using namespace family;
 
-TEST_CASE("T1")
+TEST_CASE("cheak for all methods")
 {
+    //Crate a tree, and added father/mother
     Tree T1("Yossi");
     T1.addFather("Yossi", "Asaf");
     T1.addFather("Asaf", "Guy");
     T1.addFather("Guy", "Haim");
     T1.addFather("Haim", "Amir");
+    T1.addMother("Haim", "Reut");
     T1.addMother("Asaf", "Lin");
     T1.addFather("Lin", "Avi");
     T1.addMother("Lin", "Sima");
@@ -40,6 +42,20 @@ TEST_CASE("T1")
     T1.addMother("Lior", "Liran");
     T1.addFather("Bar", "Dor");
     
+    //*******Find*****
+    CHECK(T1.find("me") == string("Yossi"));
+    CHECK(T1.find("mother") == string("Sara"));
+    CHECK(T1.find("father") == string("Asaf"));
+    CHECK((T1.find("grandfather") == string("Guy") || T1.find("grandfather") == string("Sami")));
+    CHECK((T1.find("great-grandfather") == string("Avi") || T1.find("great-grandfather") == string("Haim")));
+    CHECK((T1.find("great-great-grandfather") == string("Moshe") || T1.find("great-great-grandfather") == string("Amir") || T1.find("great-great-grandfather") == string("Or")));
+    CHECK((T1.find("grandmother") == string("Lin") || T1.find("grandmother") == string("Tal")));
+    CHECK((T1.find("great-grandmother") == string("Sima") || T1.find("great-grandmother") == string("Shir") || T1.find("great-grandmother") == string("Mor")));
+    CHECK((T1.find("great-great-grandmother") == string("Mira") || T1.find("great-great-grandmother") == string("Tamar") || T1.find("great-great-grandmother") == string("Reut")));
+    CHECK((T1.find("great-great-great-grandmother") == string("Moran") || T1.find("great-great-great-grandmother") == string("Bar")));
+    CHECK((T1.find("great-great-great-great-grandfather") == string("Shay") || T1.find("great-great-great-great-grandfather") == string("Dor")));
+    
+    //****Relation****
     CHECK(T1.relation("Yossi") == string("me"));
     CHECK(T1.relation("Asaf") == string("father"));
     CHECK(T1.relation("Guy") == string("grandfather"));
@@ -124,39 +140,47 @@ TEST_CASE("T1")
     CHECK(T1.relation("Lirgfvcccchi") == string("unrelated"));
     CHECK(T1.relation("Maftgghdgdhghgcti") == string("unrelated"));
     CHECK(T1.relation("Danda") == string("unrelated"));
-     CHECK(T1.relation("Gudr") == string("unrelated"));
-     CHECK(T1.relation("Lidhi") == string("unrelated"));
-     CHECK(T1.relation("Mdati") == string("unrelated"));
-     CHECK(T1.relation("mm") == string("unrelated"));
-     CHECK(T1.relation("tt") == string("unrelated"));
-     CHECK(T1.relation("yyddddd") == string("unrelated"));
-     CHECK(T1.relation("uue") == string("unrelated"));
-     CHECK(T1.relation("reeetr") == string("unrelated"));
-     CHECK(T1.relation("yugfrr") == string("unrelated"));
-     CHECK(T1.relation("dnvdbhfd") == string("unrelated"));
-     CHECK(T1.relation("Lidddsdn") == string("unrelated"));
-     CHECK(T1.relation("dscddd") == string("unrelated"));
-     CHECK(T1.relation("d") == string("unrelated"));
-     CHECK(T1.relation("Racccmi") == string("unrelated"));
-     CHECK(T1.relation("avifddffdcgrrgrit") == string("unrelated"));
-     CHECK(T1.relation("Yoecfregni") == string("unrelated"));
-     CHECK(T1.relation("Yonahrghfghdfdtddean") == string("unrelated"));
-     CHECK(T1.relation("Odedddd") == string("unrelated"));
-   
+    CHECK(T1.relation("Gudr") == string("unrelated"));
+    CHECK(T1.relation("Lidhi") == string("unrelated"));
+    CHECK(T1.relation("Mdati") == string("unrelated"));
+    CHECK(T1.relation("mm") == string("unrelated"));
+    CHECK(T1.relation("tt") == string("unrelated"));
+    CHECK(T1.relation("yyddddd") == string("unrelated"));
+    CHECK(T1.relation("uue") == string("unrelated"));
+    CHECK(T1.relation("reeetr") == string("unrelated"));
+    CHECK(T1.relation("yugfrr") == string("unrelated"));
+    CHECK(T1.relation("dnvdbhfd") == string("unrelated"));
+    CHECK(T1.relation("Lidddsdn") == string("unrelated"));
+    CHECK(T1.relation("dscddd") == string("unrelated"));
+    CHECK(T1.relation("d") == string("unrelated"));
+    CHECK(T1.relation("Racccmi") == string("unrelated"));
+    CHECK(T1.relation("avifddffdcgrrgrit") == string("unrelated"));
+    CHECK(T1.relation("Yoecfregni") == string("unrelated"));
+    CHECK(T1.relation("Yonahrghfghdfdtddean") == string("unrelated"));
+    CHECK(T1.relation("Odedddd") == string("unrelated"));
     
+    //******Eexception + Remov******
     CHECK_THROWS_AS(T1.addFather("Yossi", "Aviv"),std::exception);
     CHECK_THROWS_AS(T1.addMother("Yossi", "Rozi"),std::exception);
     CHECK_THROWS_AS(T1.addFather("Guy", "Ami"),std::exception);
     CHECK_THROWS_AS(T1.addMother("Sara", "Avital"),std::exception);
     CHECK_THROWS_AS(T1.addFather("Mor", "Roni"),std::exception);
-       CHECK_THROWS_AS(T1.addMother("Mor", "Sigal"),std::exception);
-       CHECK_THROWS_AS(T1.addFather("Tamar", "Ronen"),std::exception);
-       CHECK_THROWS_AS(T1.addMother("Tamar", "Nati"),std::exception);
+    CHECK_THROWS_AS(T1.addMother("Mor", "Sigal"),std::exception);
+    CHECK_THROWS_AS(T1.addFather("Tamar", "Ronen"),std::exception);
+    CHECK_THROWS_AS(T1.addMother("Tamar", "Nati"),std::exception);
     CHECK_THROWS_AS(T1.addMother("Hay", "Sigal"),std::exception);
+    CHECK_THROWS_AS(T1.addMother("Sima", ""),std::exception);
     CHECK_THROWS_AS(T1.addFather("Shahar", "Ronen"),std::exception);
     CHECK_THROWS_AS(T1.addMother("Niran", "Noa"),std::exception);
+    CHECK_THROWS_AS(T1.addMother("Dor", ""),std::exception);
     CHECK_THROWS_AS(T1.remove("Yossi"),std::exception);
- 
+    CHECK_THROWS_AS(T1.find("great-great-great-great-great-grandfather"),std::exception);
+    CHECK_THROWS_AS(T1.find("unrelated"),std::exception);
+    CHECK_THROWS_AS(T1.find(""),std::exception);
+    CHECK_THROWS_AS(T1.find("uncle"),std::exception);
+    CHECK_THROWS_AS(T1.find("unrelated"),std::exception);
+    CHECK_THROWS_AS(T1.find("great-great-great-great-great-great-great-great-grandmother"),std::exception);
+    
 }
 
 

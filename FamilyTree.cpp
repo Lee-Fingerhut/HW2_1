@@ -119,7 +119,7 @@ string Tree::member_rel(Tree* T, string name)
     {
         return "";
     }
-    cout << token << endl;
+    //cout << token << endl;
     string m = member_rel(T->mother, token);
     if(!m.empty())
     {
@@ -134,6 +134,11 @@ string Tree::member_rel(Tree* T, string name)
 }
 
 Tree& Tree::addFather(string name, string father) {
+    
+    if(father.empty())
+    {
+         throw std::runtime_error("got empty string");
+    }
     Tree* Tname = find_name_req(this, name) ;
     if(!Tname)
     {
@@ -149,6 +154,10 @@ Tree& Tree::addFather(string name, string father) {
 
 Tree& Tree::addMother(string name, string mother) {
     Tree* Tname = find_name_req(this, name) ;
+    if(mother.empty())
+       {
+            throw std::runtime_error("got empty string");
+       }
      if(!Tname)
       {
           throw std::runtime_error(name+"does not exist");
@@ -220,8 +229,11 @@ string Tree::find(string name) {
     {
         throw runtime_error ("got empty string");
     }
-    int pos = name.find("-");
-    cout << pos << endl;
+    if(name == "unrelated")
+       {
+           throw runtime_error ("not illeagle name!");
+       }
+    //int pos = name.find("-");
     
     if (name == "me") {
         return this->name;
