@@ -36,7 +36,7 @@ Tree* Tree::getMother() {
 void Tree::setMother(Tree* mother) {
     this->mother = mother;
 }
-
+//Returns the sub-tree whose name is its root
 Tree* Tree::find_name_req(Tree* T, string name) {
     if(T->name == name) {
         return T;
@@ -137,7 +137,7 @@ Tree& Tree::addFather(string name, string father) {
     
     if(father.empty())
     {
-         throw std::runtime_error("got empty string");
+        throw std::runtime_error("got empty string");
     }
     Tree* Tname = find_name_req(this, name) ;
     if(!Tname)
@@ -155,24 +155,48 @@ Tree& Tree::addFather(string name, string father) {
 Tree& Tree::addMother(string name, string mother) {
     Tree* Tname = find_name_req(this, name) ;
     if(mother.empty())
-       {
-            throw std::runtime_error("got empty string");
-       }
-     if(!Tname)
-      {
-          throw std::runtime_error(name+"does not exist");
-      }
+    {
+        throw std::runtime_error("got empty string");
+    }
+    if(!Tname)
+    {
+        throw std::runtime_error(name+"does not exist");
+    }
     if(Tname->mother)
     {
-         throw std::runtime_error(name+"alredy has a mother");
+        throw std::runtime_error(name+"alredy has a mother");
     }
     Tname->mother = new Tree(mother) ;
     return *this;
 }
 
+/*#define COUNT 10
+void display_req(Tree* T, int space, Tree* T1) {
+    if (T->getName().empty()){
+        return ;
+    }
+    space += COUNT;
+    if (T->getFather() != NULL) {
+        display_req(T->getFather(), space, T1);
+    }
+    cout << endl;
+    for (int i = COUNT; i < space; i++) {
+        cout<<" ";
+    }
+    cout << T1->relation(T->getName()) << "\n";
+    if (T->getMother() != NULL) {
+        display_req(T->getMother(), space, T1);
+    }
+}
+
+void Tree::display() {
+    display_req(this, 0, this);
+}
+*/
+
 #define COUNT 10
 void display_req(Tree* T, int space) {
-    if (T->getName().empty()) {
+    if (T->getName().empty()){
         return ;
     }
     space += COUNT;
@@ -195,8 +219,7 @@ void Tree::display() {
 
 string Tree::relation(string name) {
     
-    if(name.empty())
-    {
+    if(name.empty()){
         throw runtime_error ("got empty string");
     }
     if (this->name == name) {
@@ -230,9 +253,9 @@ string Tree::find(string name) {
         throw runtime_error ("got empty string");
     }
     if(name == "unrelated")
-       {
-           throw runtime_error ("not illeagle name!");
-       }
+    {
+        throw runtime_error ("not illeagle name!");
+    }
     //int pos = name.find("-");
     
     if (name == "me") {
@@ -263,22 +286,43 @@ string Tree::find(string name) {
 }
 
 
-void Tree::remove(string name) {
-    if ( this->father && this->father->name == name) {
-        delete this->father;
-        this->father = NULL;
-        return;
+Tree* Tree::deletTree(string name, Tree* T)
+{
+    if (T) {
+        if (T->father != NULL && T->father->name == name) {
+            return T;
+        }
+        if (T->mother != NULL && T->mother->name == name) {
+            return T;
+        }
+        
+        Tree* father = deletTree(name, T->father);
+        if (father != NULL) {
+            return father;
+        }
+        Tree* mother = deletTree(name, T->mother);
+        if (mother != NULL) {
+            return mother;
+        }
+        return NULL;
     }
-    else if (this->mother && this->mother->name == name) {
-        delete this->mother;
-        this->mother = NULL;
-        return;
-    }
-    else if(this->father) {
-        this->father->remove(name);
-    }
-    else if (this->mother) {
-        this->mother->remove(name);
+    return NULL;
+}
+
+void Tree::remove(string name)
+{
+    Tree* T = deletTree(name, this);
+    if (T) {
+        if (T->father && T->father->name == name) {
+            delete T->father;
+            T->father = NULL;
+            return;
+        }
+        else if (T->mother && T->mother->name == name) {
+            delete T->mother;
+            T->mother = NULL;
+            return;
+        }
     }
     else {
         throw runtime_error ("can't delete");

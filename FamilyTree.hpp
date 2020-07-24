@@ -42,15 +42,7 @@ public:
     string find(string name);
     void display();
     void remove(string name);
-    void deleteTree(Tree* T);
-    ~Tree() {
-        if (this->father) {
-            delete this->father;
-        }
-        if (this->mother) {
-            delete this->mother;
-        }
+    Tree* deletTree(string name, Tree* T);
+    ~Tree() {}
     };
 };
-};
-
